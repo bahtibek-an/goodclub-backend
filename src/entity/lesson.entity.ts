@@ -1,6 +1,12 @@
 import {Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn} from "typeorm";
 import {Assignment} from "./assignment.entity";
 
+export enum LessonStatus {
+    PROCESS = "PROCESS",
+    ACTIVE = "ACTIVE",
+    BLOCK = "BLOCK",
+}
+
 @Entity()
 export class Lesson {
     @PrimaryGeneratedColumn()
@@ -20,6 +26,9 @@ export class Lesson {
 
     @Column({type: 'varchar', length: 255, nullable: false})
     public title: string;
+
+    @Column({type: 'enum', enum: LessonStatus, default: LessonStatus.PROCESS})
+    public status: LessonStatus;
 
     @Column({type: "text", nullable: true})
     public description: string;

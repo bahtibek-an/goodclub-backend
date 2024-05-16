@@ -37,47 +37,18 @@ class LessonController {
                 throw ApiError.BadRequest("Image is required");
             }
             const videoPath = path.join(__dirname, "..", "..", "uploads", videoName);
-            const resolutions = ['1280x720', '640x360'];
-            let videoDuration = 0;
-            const videoFiles: any[] = await new Promise((resolve, reject) => {
-                ffmpeg.ffprobe(videoPath, (err, metadata) => {
-                    if (err) {
-                        reject(err);
-                        return;
-                    }
-                    if(metadata.format.duration) {
-                        videoDuration = metadata.format.duration;
-                    }
-                    const tasks = resolutions.map(res => {
-                        return new Promise((resolve, reject) => {
-                            const outputFileName = `${videoName}_${res}.mp4`;
-                            const outputPath = `${videoPath}_${res}.mp4`;
-                            ffmpeg(videoPath)
-                                .outputOptions(['-s', res])
-                                .output(outputPath)
-                                .on('end', () => resolve(outputFileName))
-                                .on('error', (err) => reject(err))
-                                .run();
-                        });
-                    });
-                    Promise.all(tasks).then(resolve).catch(reject);
-                });
-            });
-            this.lessonService.removeVideo(videoPath)
-                .then(() => {
-                    console.log(`Original video is deleted ${videoPath}`);
-                });
             const lesson = await this.lessonService.createLesson({
                 title,
                 description,
-                video720p: videoFiles[0],
-                video360p: videoFiles[1],
                 image: imageName,
                 author: author,
                 qualification: qualification,
                 assignments: assignments,
-                duration: videoDuration,
             });
+            this.lessonService.createQualitiesOfVideo(lesson.id, videoPath, videoName)
+                .then(() => {
+                    console.log("Qualities created!");
+                });
             return res.status(201).json(lesson);
         } catch (e) {
             next(e);
