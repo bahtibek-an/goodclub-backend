@@ -29,7 +29,7 @@ class LessonController {
             const files = req.files as any;
             const videoName = files.video?.[0]?.filename;
             const imageName = files.image?.[0]?.filename;
-            const assignments = assignmentsBody.map((assignment) => JSON.parse(assignment as unknown as string));
+            const assignments = assignmentsBody?.map((assignment) => JSON.parse(assignment as unknown as string));
             if (!videoName) {
                 throw ApiError.BadRequest("Video is required");
             }
