@@ -1,0 +1,23 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const auth_middleware_1 = __importDefault(require("../middlewares/auth.middleware"));
+const vacation_controller_1 = __importDefault(require("../controller/vacation.controller"));
+const role_middleware_1 = __importDefault(require("../middlewares/role.middleware"));
+const user_entity_1 = require("../entity/user.entity");
+const vacation_dto_1 = require("../dto/vacation.dto");
+const vacationRoutes = (0, express_1.Router)();
+const vacationController = new vacation_controller_1.default();
+vacationRoutes.get("/", auth_middleware_1.default, vacationController.getAll);
+vacationRoutes.get("/:id", auth_middleware_1.default, (0, role_middleware_1.default)(user_entity_1.UserRole.ADMIN), vacationController.getOne);
+vacationRoutes.post("/stats/", auth_middleware_1.default, (0, role_middleware_1.default)(user_entity_1.UserRole.ADMIN), vacationController.getVacationStats);
+vacationRoutes.post("/download-csv", auth_middleware_1.default, (0, role_middleware_1.default)(user_entity_1.UserRole.ADMIN), vacationController.getCsvFile);
+vacationRoutes.post("/create", auth_middleware_1.default, (0, role_middleware_1.default)(user_entity_1.UserRole.ADMIN), vacation_dto_1.createVacationValidator, vacationController.create);
+vacationRoutes.patch("/update/:id", auth_middleware_1.default, (0, role_middleware_1.default)(user_entity_1.UserRole.ADMIN), vacation_dto_1.createVacationValidator, vacationController.update);
+vacationRoutes.delete("/delete/:id", auth_middleware_1.default, (0, role_middleware_1.default)(user_entity_1.UserRole.ADMIN), vacationController.delete);
+vacationRoutes.post("/follow-vacation/:vacationId", auth_middleware_1.default, vacationController.followVacation);
+vacationRoutes.delete("/unfollow-vacation/:vacationId", auth_middleware_1.default, vacationController.unfollowVacation);
+exports.default = vacationRoutes;

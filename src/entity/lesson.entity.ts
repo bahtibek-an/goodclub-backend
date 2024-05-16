@@ -1,0 +1,41 @@
+import {Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn} from "typeorm";
+import {Assignment} from "./assignment.entity";
+
+@Entity()
+export class Lesson {
+    @PrimaryGeneratedColumn()
+    public id: number;
+
+    @Column({type: 'varchar', length: 255, nullable: true})
+    public video720p: string;
+
+    @Column({type: 'varchar', length: 255, nullable: true})
+    public video360p: string;
+
+    @Column({ type: "decimal", nullable: false, default: 0 })
+    public duration: number;
+
+    @Column({type: 'varchar', length: 255, nullable: false})
+    public image: string;
+
+    @Column({type: 'varchar', length: 255, nullable: false})
+    public title: string;
+
+    @Column({type: "text", nullable: true})
+    public description: string;
+
+    @Column({type: "text", nullable: false})
+    public author: string;
+
+    @Column({type: "text", nullable: false})
+    public qualification: string;
+
+    @OneToMany(() => Assignment, assignment => assignment.lesson, {cascade: true})
+    public assignments: Assignment[];
+
+    @CreateDateColumn({type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)"})
+    public created_at: Date;
+
+    @UpdateDateColumn({type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)", onUpdate: "CURRENT_TIMESTAMP(6)"})
+    public updated_at: Date;
+}
