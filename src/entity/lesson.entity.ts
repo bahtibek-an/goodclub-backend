@@ -43,7 +43,7 @@ export class Lesson {
     @Column({ type: "decimal", nullable: false, default: 0 })
     public order: number;
 
-    @OneToMany(() => Assignment, assignment => assignment.lesson, {cascade: true})
+    @OneToMany(() => Assignment, assignment => assignment.lesson)
     public assignments: Assignment[];
 
     @OneToMany(() => StudentLesson, studentLesson => studentLesson.lesson)

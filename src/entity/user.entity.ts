@@ -1,5 +1,4 @@
 import {Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn} from "typeorm";
-import {Lesson} from "./lesson.entity";
 import {StudentLesson} from "./student.lesson.entity";
 
 export enum UserRole {

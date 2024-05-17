@@ -3,6 +3,7 @@ import {GenderEnum, User, UserRole, UserStatus} from "../entity/user.entity";
 import {AppDataSource} from "../config/db.config";
 import {createHashPassword} from "../config/bcrypt.config";
 import ApiError from "../exceptions/api.error.exception";
+import * as ExcelJS from "exceljs";
 
 
 class UserService {
@@ -102,6 +103,77 @@ class UserService {
             retVal += charset.charAt(Math.floor(Math.random() * n));
         }
         return retVal;
+    }
+
+    public async generateExcel() {
+        const users = await this.userRepository.find({ where: { role: UserRole.USER } });
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet("Users", {
+            pageSetup: { fitToPage: true }
+        });
+        worksheet.autoFilter = {
+            from: "A",
+            to: "H"
+        };
+        worksheet.columns = [
+            { header: "ID", key: "col1", width: 25 },
+            { header: "username", key: "col2", width: 25 },
+            { header: "password", key: "col3", width: 25 },
+            { header: "First name", key: "col4", width: 25 },
+            { header: "Last name", key: "col5", width: 25 },
+            { header: "Phone number", key: "col6", width: 25 },
+            { header: "Date of birth", key: "col7", width: 25 },
+            { header: "Province", key: "col8", width: 25 },
+            { header: "District", key: "col9", width: 25 },
+            { header: "User type", key: "col10", width: 25 },
+            { header: "Gender", key: "col11", width: 25 },
+            { header: "Workplace", key: "col12", width: 25 },
+            { header: "Status", key: "col13", width: 25 },
+            { header: "School number", key: "col14", width: 25 },
+        ];
+        worksheet.getRow(1).eachCell((cell) => {
+            cell.fill = {
+                type: "pattern",
+                pattern: "solid",
+                fgColor: { argb: "5B9BD5" }
+            };
+            cell.border = {
+                top: { style: "thin" },
+                left: { style: "thin" },
+                bottom: { style: "thin" },
+                right: { style: "thin" }
+            };
+        });
+        users.forEach((user, index) => {
+            const row = worksheet.addRow({
+                col1: user.id,
+                col2: user.username,
+                col3: user.password,
+                col4: user.firstName,
+                col5: user.lastName,
+                col6: user.phoneNumber,
+                col7: user.dateOfBirth,
+                col8: user.province,
+                col9: user.district,
+                col10: user.userType,
+                col11: user.gender,
+                col12: user.workplace,
+                col13: user.status,
+                col14: user.schoolNumber,
+            });
+
+            if (index % 2 === 1) {
+                row.eachCell((cell) => {
+                    cell.fill = {
+                        type: "pattern",
+                        pattern: "solid",
+                        fgColor: { argb: "DDEBF7" }
+                    };
+                });
+            }
+        });
+
+        return await workbook.xlsx.writeBuffer();
     }
 }
 

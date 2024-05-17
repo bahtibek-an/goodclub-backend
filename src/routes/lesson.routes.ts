@@ -4,11 +4,10 @@ import authMiddleware from "../middlewares/auth.middleware";
 import roleMiddleware from "../middlewares/role.middleware";
 import {UserRole} from "../entity/user.entity";
 import {upload} from "../config/multer.config";
-import {lessonValidator} from "../dto/lesson.dto";
+import {lessonUpdateValidator, lessonValidator} from "../dto/lesson.dto";
 
 const lessonRoutes = Router();
 const lessonController = new LessonController();
-
 
 
 // Routes for user
@@ -23,7 +22,11 @@ lessonRoutes.post("/create", authMiddleware, roleMiddleware(UserRole.ADMIN),
     ]), lessonValidator, lessonController.createLesson);
 lessonRoutes.get("/:id", authMiddleware, roleMiddleware(UserRole.ADMIN), lessonController.getLessonById);
 lessonRoutes.get("/", authMiddleware, roleMiddleware(UserRole.ADMIN), lessonController.getAllLessons);
-
+lessonRoutes.delete("/:id", authMiddleware, roleMiddleware(UserRole.ADMIN), lessonController.deleteLesson);
+lessonRoutes.put("/:id", authMiddleware, roleMiddleware(UserRole.ADMIN), upload.fields([
+    {name: "video", maxCount: 1},
+    {name: "image", maxCount: 1},
+]), lessonUpdateValidator, lessonController.updateLesson);
 
 
 export default lessonRoutes;

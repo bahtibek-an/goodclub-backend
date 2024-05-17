@@ -13,7 +13,7 @@ export class StudentLesson {
     @PrimaryGeneratedColumn()
     public id: number;
 
-    @ManyToOne(type => User, user => user.lessons, { cascade: true })
+    @ManyToOne(type => User, user => user.lessons)
     public user: User;
 
     @Column({
@@ -23,6 +23,6 @@ export class StudentLesson {
     })
     public status: StudentLessonStatus;
 
-    @ManyToOne(() => Lesson, lesson => lesson.studentLessons, { cascade: true })
+    @ManyToOne(() => Lesson, lesson => lesson.studentLessons)
     public lesson: Lesson
 }

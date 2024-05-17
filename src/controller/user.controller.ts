@@ -82,6 +82,19 @@ class UserController {
         }
     }
 
+    public getExcelOfStudents = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            res.set({
+                "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "Content-Disposition": 'attachment; filename=Export.xlsx'
+            });
+            const buffer = await this.userService.generateExcel();
+            return res.send(buffer);
+        } catch (e) {
+            next(e);
+        }
+    }
+
 
 }
 
