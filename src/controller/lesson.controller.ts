@@ -96,6 +96,17 @@ class LessonController {
         }
     }
 
+    public completeLesson = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { id: lessonId } = req.params;
+            const userId = (req as RequestWithUser).user.id;
+            await this.lessonService.completeLesson(userId, +lessonId);
+            return res.json({ message: "Lesson completed and next lesson is unlocked" });
+        } catch (e) {
+            next(e);
+        }
+    }
+
 }
 
 export default LessonController;

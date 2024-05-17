@@ -6,6 +6,7 @@ import fs from "node:fs";
 import ffmpeg from "fluent-ffmpeg";
 import {User} from "../entity/user.entity";
 import {StudentLesson, StudentLessonStatus} from "../entity/student.lesson.entity";
+import ApiError from "../exceptions/api.error.exception";
 
 class LessonService {
     private readonly lessonRepository: Repository<Lesson> = AppDataSource.getRepository(Lesson);
@@ -36,6 +37,28 @@ class LessonService {
             where: {user: { id: user.id }},
             relations: ["lesson"],
         });
+    }
+
+    public async completeLesson(userId: number, lessonId: number) {
+        const currentLesson = await this.studentLessonRepository.findOneBy({
+            user: { id: userId },
+            id: lessonId,
+        });
+        console.log(currentLesson)
+        if(!currentLesson || currentLesson.status !== StudentLessonStatus.UNLOCKED) {
+            throw ApiError.ForbiddenError();
+        }
+        currentLesson.status = StudentLessonStatus.COMPLETED;
+        await this.studentLessonRepository.save(currentLesson);
+        const nextLesson  = await this.studentLessonRepository.findOneBy({
+            user: { id: userId },
+            id: lessonId + 1,
+        });
+        console.log(nextLesson);
+        if(nextLesson) {
+            nextLesson.status = StudentLessonStatus.UNLOCKED;
+            await this.studentLessonRepository.save(nextLesson);
+        }
     }
 
     public async createLesson(lesson: LessonDto) {

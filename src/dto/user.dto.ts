@@ -43,6 +43,15 @@ export const fillUserValidator = [
             }
             return true;
         }),
+    check("schoolNumber")
+        .trim()
+        .custom((value, {req}) => {
+            const userType = req.body.userType;
+            if (userType === UserType.TEACHER && !value) {
+                throw new Error("School number is required if user type is TEACHER");
+            }
+            return true;
+        }),
 ]
 
 export class UserLoginDto {
@@ -59,6 +68,7 @@ export class UserDto {
         username: string;
         role: UserRole;
         gender: GenderEnum;
+        status: UserStatus;
     }
 
     constructor(accessToken: string, user: User) {
@@ -70,6 +80,7 @@ export class UserDto {
             username: user.username,
             role: user.role,
             gender: user.gender,
+            status: user.status
         };
     }
 }

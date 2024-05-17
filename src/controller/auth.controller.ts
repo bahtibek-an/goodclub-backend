@@ -30,7 +30,8 @@ class AuthController {
             const refreshToken = await this.jwtConfig.createRefreshToken({
                 id: user.user.id,
                 role: user.user.role,
-                gender: user.user.gender
+                gender: user.user.gender,
+                status: user.user.status,
             });
             res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
@@ -55,7 +56,8 @@ class AuthController {
             const refreshToken = await this.jwtConfig.createRefreshToken({
                 id: user.user.id,
                 role: user.user.role,
-                gender: user.user.gender
+                gender: user.user.gender,
+                status: user.user.status,
             });
             res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
@@ -91,7 +93,8 @@ class AuthController {
             const newRefreshToken = await this.jwtConfig.createRefreshToken({
                 id: user.user.id,
                 role: user.user.role,
-                gender: user.user.gender
+                gender: user.user.gender,
+                status: user.user.status,
             });
             res.cookie("refreshToken", newRefreshToken, {
                 httpOnly: true,

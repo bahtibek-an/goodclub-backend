@@ -13,7 +13,7 @@ const lessonController = new LessonController();
 
 // Routes for user
 lessonRoutes.get("/student", authMiddleware, roleMiddleware(UserRole.USER), lessonController.getStudentLessons);
-
+lessonRoutes.post("/complete/:id", authMiddleware, roleMiddleware(UserRole.USER), lessonController.completeLesson);
 
 // Routes for admin
 lessonRoutes.post("/create", authMiddleware, roleMiddleware(UserRole.ADMIN),

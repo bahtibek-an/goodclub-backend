@@ -31,7 +31,18 @@ class UserController {
                 throw ApiError.BadRequest("error", errors.array());
             }
             const user = (req as unknown as RequestWithUser).user;
-            const {firstName, lastName, phoneNumber, dateOfBirth, province, district, userType, workplace, gender} = req.body;
+            const {
+                firstName,
+                lastName,
+                phoneNumber,
+                dateOfBirth,
+                province,
+                district,
+                userType,
+                workplace,
+                gender,
+                schoolNumber
+            } = req.body;
             const updatedUser = await this.userService.fillUserById(user.id, {
                 firstName,
                 lastName,
@@ -42,6 +53,7 @@ class UserController {
                 userType,
                 workplace,
                 gender,
+                schoolNumber
             });
             return res.json(updatedUser);
         } catch (e) {
