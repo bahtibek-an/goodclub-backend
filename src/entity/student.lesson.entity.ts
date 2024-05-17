@@ -13,16 +13,16 @@ export class StudentLesson {
     @PrimaryGeneratedColumn()
     public id: number;
 
-    @ManyToOne(type => User, user => user.lessons)
+    @ManyToOne(type => User, user => user.lessons, { cascade: true })
     public user: User;
 
     @Column({
         type: "enum",
         enum: StudentLessonStatus,
-        default: StudentLessonStatus.LOCKED
+        default: StudentLessonStatus.LOCKED,
     })
     public status: StudentLessonStatus;
 
-    @ManyToOne(() => Lesson, lesson => lesson.studentLessons)
+    @ManyToOne(() => Lesson, lesson => lesson.studentLessons, { cascade: true })
     public lesson: Lesson
 }

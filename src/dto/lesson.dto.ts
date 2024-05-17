@@ -13,6 +13,9 @@ export const lessonValidator = [
     check("author")
         .isString()
         .withMessage('Description must be a string'),
+    check("order")
+        .isNumeric()
+        .withMessage('Order must be a number'),
     check("qualification")
         .isString()
         .withMessage('Description must be a string'),
@@ -27,5 +30,6 @@ export class LessonDto {
     image: string;
     author: string;
     qualification: string;
+    order: number;
     assignments: Assignment[];
 }

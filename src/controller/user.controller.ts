@@ -1,6 +1,6 @@
 import express, {Request, Response, NextFunction} from "express";
 import UserService from "../services/user.service";
-import {UserCreateDto} from "../dto/user.dto";
+import {UserCreateDto, UserDto} from "../dto/user.dto";
 import {User, UserStatus} from "../entity/user.entity";
 import RequestWithBody from "../interfaces/RequstWithBody.interface";
 import RequestWithUser from "../interfaces/RequestWithUser.interface";
@@ -55,7 +55,7 @@ class UserController {
                 gender,
                 schoolNumber
             });
-            return res.json(updatedUser);
+            return res.json(new UserDto("", updatedUser));
         } catch (e) {
             next(e);
         }

@@ -40,6 +40,9 @@ export class Lesson {
     @Column({type: "text", nullable: false})
     public qualification: string;
 
+    @Column({ type: "decimal", nullable: false, default: 0 })
+    public order: number;
+
     @OneToMany(() => Assignment, assignment => assignment.lesson, {cascade: true})
     public assignments: Assignment[];
 

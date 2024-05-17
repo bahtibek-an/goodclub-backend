@@ -28,7 +28,7 @@ class LessonController {
             if (!errors.isEmpty()) {
                 throw ApiError.BadRequest("error", errors.array());
             }
-            const {title, description, author, qualification, assignments: assignmentsBody} = req.body;
+            const {title, description, author, qualification, order, assignments: assignmentsBody} = req.body;
             const files = req.files as any;
             const videoName = files.video?.[0]?.filename;
             const imageName = files.image?.[0]?.filename;
@@ -47,6 +47,7 @@ class LessonController {
                 author: author,
                 qualification: qualification,
                 assignments: assignments,
+                order: order
             });
             this.lessonService.createQualitiesOfVideo(lesson.id, videoPath, videoName)
                 .then(() => {
@@ -70,9 +71,9 @@ class LessonController {
 
     public getLessonById = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { id } = req.params;
+            const {id} = req.params;
             const lesson = await this.lessonService.getLessonById(+id);
-            if(!lesson) {
+            if (!lesson) {
                 throw ApiError.NotFoundError();
             }
             return res.json(lesson);
@@ -85,7 +86,7 @@ class LessonController {
         try {
             const userId = (req as RequestWithUser).user.id;
             const user = await this.userService.getUserById(userId);
-            if(!user) {
+            if (!user) {
                 throw ApiError.NotFoundError();
             }
             const studentLessons = await this.lessonService.getStudentLessons(user);
@@ -98,10 +99,10 @@ class LessonController {
 
     public completeLesson = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { id: lessonId } = req.params;
+            const {id: lessonId} = req.params;
             const userId = (req as RequestWithUser).user.id;
             await this.lessonService.completeLesson(userId, +lessonId);
-            return res.json({ message: "Lesson completed and next lesson is unlocked" });
+            return res.json({message: "Lesson completed and next lesson is unlocked"});
         } catch (e) {
             next(e);
         }
