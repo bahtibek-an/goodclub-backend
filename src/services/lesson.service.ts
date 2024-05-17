@@ -66,8 +66,6 @@ class LessonService {
     }
 
     public async getAllLessons() {
-        await this.studentLessonRepository.clear();
-        await this.lessonRepository.clear();
         return await this.lessonRepository.find();
     }
 
