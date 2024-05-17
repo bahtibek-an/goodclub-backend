@@ -1,5 +1,6 @@
 import {Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn} from "typeorm";
 import {Assignment} from "./assignment.entity";
+import {StudentLesson} from "./student.lesson.entity";
 
 export enum LessonStatus {
     PROCESS = "PROCESS",
@@ -41,6 +42,9 @@ export class Lesson {
 
     @OneToMany(() => Assignment, assignment => assignment.lesson, {cascade: true})
     public assignments: Assignment[];
+
+    @OneToMany(() => StudentLesson, studentLesson => studentLesson.lesson)
+    public studentLessons: StudentLesson[];
 
     @CreateDateColumn({type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)"})
     public created_at: Date;

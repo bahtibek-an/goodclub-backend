@@ -4,9 +4,39 @@ import {Lesson, LessonStatus} from "../entity/lesson.entity";
 import {LessonDto} from "../dto/lesson.dto";
 import fs from "node:fs";
 import ffmpeg from "fluent-ffmpeg";
+import {User} from "../entity/user.entity";
+import {StudentLesson, StudentLessonStatus} from "../entity/student.lesson.entity";
 
 class LessonService {
     private readonly lessonRepository: Repository<Lesson> = AppDataSource.getRepository(Lesson);
+    private readonly studentLessonRepository: Repository<StudentLesson> = AppDataSource.getRepository(StudentLesson);
+
+    public async initializeVideos(user: User) {
+        const lessons = await this.lessonRepository.find();
+        for (const lesson of lessons) {
+            const index = lessons.indexOf(lesson);
+            const studentLesson = await this.studentLessonRepository.findOneBy({
+                lesson: {id: lesson.id},
+                user: {id: user.id}
+            });
+            if(studentLesson) {
+                continue;
+            }
+            await this.studentLessonRepository.save({
+                status: index === 0 ? StudentLessonStatus.UNLOCKED : StudentLessonStatus.LOCKED,
+                lesson: { id: lesson.id },
+                user: { id: user.id }
+            });
+        }
+    }
+
+    public async getStudentLessons(user: User) {
+        await this.initializeVideos(user);
+        return await this.studentLessonRepository.find({
+            where: {user: { id: user.id }},
+            relations: ["lesson"],
+        });
+    }
 
     public async createLesson(lesson: LessonDto) {
         return await this.lessonRepository.save(lesson);
@@ -14,6 +44,10 @@ class LessonService {
 
     public async getAllLessons() {
         return await this.lessonRepository.find();
+    }
+
+    public async getLessonById(lessonId: number) {
+        return await this.lessonRepository.findOneBy({id: lessonId});
     }
 
     public async removeVideo(path: string) {
@@ -37,7 +71,7 @@ class LessonService {
                     reject(err);
                     return;
                 }
-                if(metadata.format.duration) {
+                if (metadata.format.duration) {
                     videoDuration = metadata.format.duration;
                 }
                 const tasks = resolutions.map(res => {
@@ -55,7 +89,7 @@ class LessonService {
                 Promise.all(tasks).then(resolve).catch(reject);
             });
         });
-        const lesson = await this.lessonRepository.findOneBy({ id: lessonId });
+        const lesson = await this.lessonRepository.findOneBy({id: lessonId});
         await this.lessonRepository.save({
             ...lesson,
             video720p: videoFiles[0],

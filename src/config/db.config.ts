@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import {User} from "../entity/user.entity";
 import {Lesson} from "../entity/lesson.entity";
 import {Assignment} from "../entity/assignment.entity";
+import {StudentLesson} from "../entity/student.lesson.entity";
 dotenv.config();
 
 export const AppDataSource = new DataSource({
@@ -14,7 +15,7 @@ export const AppDataSource = new DataSource({
     database: process.env.POSTGRES_DATABASE,
     synchronize: true,
     logging: true,
-    entities: [User, Lesson, Assignment],
+    entities: [User, Lesson, Assignment, StudentLesson],
     subscribers: [],
     migrations: [],
 })

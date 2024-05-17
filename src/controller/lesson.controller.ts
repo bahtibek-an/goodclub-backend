@@ -10,13 +10,16 @@ import {validationResult} from "express-validator";
 import ffmpeg, {ffprobe} from "fluent-ffmpeg";
 import path from "node:path";
 import fs from "node:fs";
+import RequestWithUser from "../interfaces/RequestWithUser.interface";
 
 
 class LessonController {
     private readonly lessonService: LessonService;
+    private readonly userService: UserService;
 
     constructor() {
         this.lessonService = new LessonService();
+        this.userService = new UserService();
     }
 
     public createLesson = async (req: RequestWithBody<LessonDto>, res: Response, next: NextFunction) => {
@@ -60,6 +63,34 @@ class LessonController {
         try {
             const lessons = await this.lessonService.getAllLessons();
             return res.json(lessons);
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    public getLessonById = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { id } = req.params;
+            const lesson = await this.lessonService.getLessonById(+id);
+            if(!lesson) {
+                throw ApiError.NotFoundError();
+            }
+            return res.json(lesson);
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    public getStudentLessons = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const userId = (req as RequestWithUser).user.id;
+            const user = await this.userService.getUserById(userId);
+            if(!user) {
+                throw ApiError.NotFoundError();
+            }
+            const studentLessons = await this.lessonService.getStudentLessons(user);
+
+            return res.json(studentLessons);
         } catch (e) {
             next(e);
         }
