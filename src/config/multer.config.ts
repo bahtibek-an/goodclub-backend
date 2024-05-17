@@ -9,7 +9,6 @@ const storage = multer.diskStorage({
     },
     filename: (req, file, cb) => {
         const uniqueSuffix = uuidv4();
-        console.log(file)
         cb(null, `${uniqueSuffix}${file.originalname}`);
     }
 });
@@ -18,7 +17,6 @@ const fileFilter = (req: express.Request, file: Express.Multer.File, cb: multer.
     if (file.mimetype.startsWith('video/') || file.mimetype.startsWith('image/')) {
         cb(null, true);
     } else {
-        // cb(null, false);
         cb(new Error("Not a valid file type"));
     }
 };

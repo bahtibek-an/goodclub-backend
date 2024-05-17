@@ -8,6 +8,10 @@ import ApiError from "../exceptions/api.error.exception";
 class UserService {
     private readonly userRepository: Repository<User> = AppDataSource.getRepository(User);
 
+    public async getUserById(userId: number) {
+        return await this.userRepository.findOneBy({ id: userId });
+    }
+
     public async getUsers(offset: number, limit: number, status?: UserStatus, search?: string) {
         const whereClause: FindOptionsWhere<User> = {
             role: UserRole.USER,

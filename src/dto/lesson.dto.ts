@@ -23,12 +23,9 @@ export const lessonValidator = [
 
 export class LessonDto {
     title: string;
-    video720p: string;
-    video360p: string;
     description: string;
     image: string;
     author: string;
     qualification: string;
     assignments: Assignment[];
-    duration: number;
 }
