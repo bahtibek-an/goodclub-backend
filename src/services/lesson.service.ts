@@ -9,6 +9,8 @@ import {StudentLesson, StudentLessonStatus} from "../entity/student.lesson.entit
 import ApiError from "../exceptions/api.error.exception";
 import path from "node:path";
 import {Assignment} from "../entity/assignment.entity";
+import dotenv from "dotenv";
+dotenv.config();
 
 class LessonService {
     private readonly lessonRepository: Repository<Lesson> = AppDataSource.getRepository(Lesson);
@@ -38,7 +40,7 @@ class LessonService {
         await this.initializeVideos(user);
         return await this.studentLessonRepository.find({
             where: {user: {id: user.id}},
-            relations: ["lesson"],
+            relations: ["lesson", "lesson.assignments"],
             order: {
                 lesson: {
                     created_at: "ASC"
@@ -206,7 +208,8 @@ class LessonService {
     }
 
     public getUploadDir(fileName: string) {
-        return path.join(__dirname, "..", "..", "uploads", fileName);
+        const baseUploadPath = process.env.UPLOAD_DIR || path.join(__dirname, "..", "..", "uploads");
+        return  path.join(baseUploadPath, fileName);
     }
 
     public async createLesson(lesson: LessonDto) {
