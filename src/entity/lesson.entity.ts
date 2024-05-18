@@ -1,5 +1,12 @@
 import {Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn} from "typeorm";
 import {Assignment} from "./assignment.entity";
+import {StudentLesson} from "./student.lesson.entity";
+
+export enum LessonStatus {
+    PROCESS = "PROCESS",
+    ACTIVE = "ACTIVE",
+    BLOCK = "BLOCK",
+}
 
 @Entity()
 export class Lesson {
@@ -21,6 +28,9 @@ export class Lesson {
     @Column({type: 'varchar', length: 255, nullable: false})
     public title: string;
 
+    @Column({type: 'enum', enum: LessonStatus, default: LessonStatus.PROCESS})
+    public status: LessonStatus;
+
     @Column({type: "text", nullable: true})
     public description: string;
 
@@ -30,8 +40,14 @@ export class Lesson {
     @Column({type: "text", nullable: false})
     public qualification: string;
 
-    @OneToMany(() => Assignment, assignment => assignment.lesson, {cascade: true})
+    @Column({ type: "decimal", nullable: false, default: 0 })
+    public order: number;
+
+    @OneToMany(() => Assignment, assignment => assignment.lesson)
     public assignments: Assignment[];
+
+    @OneToMany(() => StudentLesson, studentLesson => studentLesson.lesson)
+    public studentLessons: StudentLesson[];
 
     @CreateDateColumn({type: "timestamp", default: () => "CURRENT_TIMESTAMP(6)"})
     public created_at: Date;

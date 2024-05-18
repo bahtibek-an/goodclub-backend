@@ -12,6 +12,8 @@ const userController = new UserController();
 userRoutes.get("/", authMiddleware, roleMiddleware(UserRole.ADMIN), userController.getAllUsers);
 userRoutes.post("/create", authMiddleware, roleMiddleware(UserRole.ADMIN), userController.createUser);
 userRoutes.post("/fill-user", authMiddleware, fillUserValidator, userController.fillUser);
+userRoutes.get("/generate-excel", authMiddleware, roleMiddleware(UserRole.ADMIN), userController.getExcelOfStudents);
+userRoutes.get("/:id", authMiddleware, roleMiddleware(UserRole.ADMIN), userController.getStudentById)
 
 
 export default userRoutes;

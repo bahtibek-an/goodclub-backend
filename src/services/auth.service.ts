@@ -30,7 +30,8 @@ class AuthService {
         const accessToken = await this.jwtConfig.createAccessToken({
             id: candidate.id,
             role: candidate.role,
-            gender: candidate.gender
+            gender: candidate.gender,
+            status: candidate.status
         });
         return new UserDto(accessToken, candidate);
     }
@@ -48,7 +49,8 @@ class AuthService {
         const accessToken = await this.jwtConfig.createAccessToken({
             id: candidate.id,
             role: candidate.role,
-            gender: candidate.gender
+            gender: candidate.gender,
+            status: candidate.status
         });
         return new UserDto(accessToken, candidate);
     }
@@ -68,7 +70,8 @@ class AuthService {
         const accessToken = await this.jwtConfig.createAccessToken({
             id: user.id,
             role: user.role,
-            gender: user.gender
+            gender: user.gender,
+            status: user.status
         });
         return {
             accessToken,
@@ -79,6 +82,7 @@ class AuthService {
                 id: user.id,
                 role: user.role,
                 gender: user.gender,
+                status: user.status
             },
         };
     }

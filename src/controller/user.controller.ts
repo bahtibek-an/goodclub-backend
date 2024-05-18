@@ -1,6 +1,6 @@
 import express, {Request, Response, NextFunction} from "express";
 import UserService from "../services/user.service";
-import {UserCreateDto} from "../dto/user.dto";
+import {UserCreateDto, UserDto} from "../dto/user.dto";
 import {User, UserStatus} from "../entity/user.entity";
 import RequestWithBody from "../interfaces/RequstWithBody.interface";
 import RequestWithUser from "../interfaces/RequestWithUser.interface";
@@ -31,7 +31,18 @@ class UserController {
                 throw ApiError.BadRequest("error", errors.array());
             }
             const user = (req as unknown as RequestWithUser).user;
-            const {firstName, lastName, phoneNumber, dateOfBirth, province, district, userType, workplace, gender} = req.body;
+            const {
+                firstName,
+                lastName,
+                phoneNumber,
+                dateOfBirth,
+                province,
+                district,
+                userType,
+                workplace,
+                gender,
+                schoolNumber
+            } = req.body;
             const updatedUser = await this.userService.fillUserById(user.id, {
                 firstName,
                 lastName,
@@ -42,8 +53,9 @@ class UserController {
                 userType,
                 workplace,
                 gender,
+                schoolNumber
             });
-            return res.json(updatedUser);
+            return res.json(new UserDto("", updatedUser));
         } catch (e) {
             next(e);
         }
@@ -65,6 +77,32 @@ class UserController {
                 limit: limit,
                 count: users.count,
             });
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    public getExcelOfStudents = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            res.set({
+                "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                "Content-Disposition": 'attachment; filename=Export.xlsx'
+            });
+            const buffer = await this.userService.generateExcel();
+            return res.send(buffer);
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    public getStudentById = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { id } = req.params;
+            const user = await this.userService.getUserById(+id);
+            if(!user) {
+                throw ApiError.NotFoundError();
+            }
+            return res.json(user);
         } catch (e) {
             next(e);
         }

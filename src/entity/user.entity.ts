@@ -1,4 +1,5 @@
 import {Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn} from "typeorm";
+import {StudentLesson} from "./student.lesson.entity";
 
 export enum UserRole {
     ADMIN = "ADMIN",
@@ -25,6 +26,9 @@ export enum UserType {
 export class User {
     @PrimaryGeneratedColumn()
     public id: number;
+
+    @OneToMany(() => StudentLesson, studentLesson => studentLesson.user)
+    public lessons: StudentLesson[];
 
     @Column({type: 'varchar', length: 255, unique: true})
     public username: string;

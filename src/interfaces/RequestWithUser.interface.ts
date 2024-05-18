@@ -1,11 +1,12 @@
 import { Request } from "express";
 import {JwtPayload} from "jsonwebtoken";
-import {GenderEnum, UserRole} from "../entity/user.entity";
+import {GenderEnum, UserRole, UserStatus} from "../entity/user.entity";
 
 export interface UserJwtPayload {
     id: number;
     gender: GenderEnum;
     role: UserRole;
+    status: UserStatus
 }
 
 interface RequestWithUser extends Request {
