@@ -65,7 +65,7 @@ class LessonService {
         imageName: string,
         author: string,
         qualification: string,
-        assignments: any,
+        assignments: Assignment[],
         videoName: string | null | undefined,
     }) {
         const lesson = await this.lessonRepository.findOneBy({
@@ -132,9 +132,20 @@ class LessonService {
         lesson.description = description;
         lesson.author = author;
         lesson.qualification = qualification;
-        lesson.assignments = assignments;
+        lesson.qualification = qualification;
+        lesson.assignments = [];
+        const updatedLesson = await this.lessonRepository.save(lesson)
 
-        return await this.lessonRepository.save(lesson);
+        const assignmentsList = assignments.map((item) => {
+            const assignment = new Assignment();
+            assignment.title = item.title;
+            assignment.description = item.description;
+            assignment.lesson = lesson;
+            return assignment;
+        });
+        await this.assignmentRepository.save(assignmentsList)
+
+        return updatedLesson;
     }
 
     public async saveLesson({title, description, imageName, author, qualification, assignments, videoName}: {
@@ -143,7 +154,7 @@ class LessonService {
         imageName: string,
         author: string,
         qualification: string,
-        assignments: any,
+        assignments: Assignment[],
         videoName: string,
     }) {
         const videoPath = this.getUploadDir(videoName);
@@ -153,10 +164,18 @@ class LessonService {
             image: imageName,
             author: author,
             qualification: qualification,
-            assignments: assignments,
+            assignments: [],
             // order: order
             order: 0,
         });
+        const assignmentsList = assignments.map((item) => {
+            const assignment = new Assignment();
+            assignment.title = item.title;
+            assignment.description = item.description;
+            assignment.lesson = lesson;
+            return assignment;
+        });
+        await this.assignmentRepository.save(assignmentsList)
         this.createQualitiesOfVideo(lesson.id, videoPath, videoName)
             .then(() => {
                 console.log("Qualities created!");
