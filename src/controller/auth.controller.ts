@@ -36,7 +36,7 @@ class AuthController {
             res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
                 maxAge: 30 * 24 * 60 * 60 * 1000,
-                sameSite: "strict",
+                sameSite: "none",
                 secure: true,
             });
             return res.json(user);
@@ -62,7 +62,7 @@ class AuthController {
             res.cookie("refreshToken", refreshToken, {
                 httpOnly: true,
                 maxAge: 30 * 24 * 60 * 60 * 1000,
-                sameSite: "strict",
+                sameSite: "none",
                 secure: true,
             });
             return res.json(user);
@@ -77,7 +77,7 @@ class AuthController {
             res.cookie("refreshToken", "", {
                 httpOnly: true,
                 maxAge: 0,
-                sameSite: "strict",
+                sameSite: "none",
                 secure: true
             });
             return res.sendStatus(200);
@@ -99,7 +99,7 @@ class AuthController {
             res.cookie("refreshToken", newRefreshToken, {
                 httpOnly: true,
                 maxAge: 30 * 24 * 60 * 60 * 1000,
-                sameSite: "strict",
+                sameSite: "none",
                 secure: true
             });
             return res.json(user);
