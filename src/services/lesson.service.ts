@@ -209,7 +209,12 @@ class LessonService {
 
     public getUploadDir(fileName: string) {
         const baseUploadPath = process.env.UPLOAD_DIR || path.join(__dirname, "..", "..", "uploads");
-        return  path.join(baseUploadPath, fileName);
+        return path.join(baseUploadPath, fileName);
+    }
+
+    public getUploadDirWithoutFileName() {
+        const baseUploadPath = process.env.UPLOAD_DIR || path.join(__dirname, "..", "..", "uploads");
+        return path.join(baseUploadPath);
     }
 
     public async createLesson(lesson: LessonDto) {

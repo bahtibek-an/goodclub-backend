@@ -2,10 +2,13 @@ import multer from "multer";
 import path from "node:path";
 import { v4 as uuidv4 } from 'uuid';
 import express from "express";
+import LessonService from "../services/lesson.service";
+
+const lessonService = new LessonService();
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, path.join(__dirname, "..", "..", "uploads"));
+        cb(null, lessonService.getUploadDirWithoutFileName());
     },
     filename: (req, file, cb) => {
         const uniqueSuffix = uuidv4();
