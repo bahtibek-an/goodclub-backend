@@ -15,12 +15,12 @@ lessonRoutes.get("/student", authMiddleware, roleMiddleware(UserRole.USER), less
 lessonRoutes.post("/complete/:id", authMiddleware, roleMiddleware(UserRole.USER), lessonController.completeLesson);
 
 // Routes for admin
+lessonRoutes.get("/:id", authMiddleware, roleMiddleware(UserRole.ADMIN), lessonController.getLessonById);
 lessonRoutes.post("/create", authMiddleware, roleMiddleware(UserRole.ADMIN),
     upload.fields([
         {name: "video", maxCount: 1},
         {name: "image", maxCount: 1},
     ]), lessonValidator, lessonController.createLesson);
-lessonRoutes.get("/:id", authMiddleware, roleMiddleware(UserRole.ADMIN), lessonController.getLessonById);
 lessonRoutes.get("/", authMiddleware, roleMiddleware(UserRole.ADMIN), lessonController.getAllLessons);
 lessonRoutes.delete("/:id", authMiddleware, roleMiddleware(UserRole.ADMIN), lessonController.deleteLesson);
 lessonRoutes.put("/:id", authMiddleware, roleMiddleware(UserRole.ADMIN), upload.fields([

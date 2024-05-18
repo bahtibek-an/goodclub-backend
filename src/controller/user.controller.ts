@@ -95,6 +95,19 @@ class UserController {
         }
     }
 
+    public getStudentById = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { id } = req.params;
+            const user = await this.userService.getUserById(+id);
+            if(!user) {
+                throw ApiError.NotFoundError();
+            }
+            return res.json(user);
+        } catch (e) {
+            next(e);
+        }
+    }
+
 
 }
 
