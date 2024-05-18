@@ -7,6 +7,7 @@ import path from "node:path";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import authMiddleware from "./middlewares/auth.middleware";
+import {getUploadDirWithoutFileName} from "./utils";
 
 const app = express();
 app.use(morgan("combined"));
@@ -17,7 +18,7 @@ app.use(express.json());
 
 app.use(
     // authMiddleware,
-    express.static(path.join(__dirname, "..", "uploads"))
+    express.static(getUploadDirWithoutFileName())
 );
 
 app.use("/api/v1", routes);
