@@ -69,6 +69,8 @@ export class UserDto {
         role: UserRole;
         gender: GenderEnum;
         status: UserStatus;
+        schoolNumber: number;
+        workplace: string;
     }
 
     constructor(accessToken: string, user: User) {
@@ -80,7 +82,9 @@ export class UserDto {
             username: user.username,
             role: user.role,
             gender: user.gender,
-            status: user.status
+            status: user.status,
+            schoolNumber: user.schoolNumber,
+            workplace: user.workplace,
         };
     }
 }
@@ -99,6 +103,8 @@ export class UserCreateDto {
     password: string;
     role: UserRole;
     userType: UserType;
+    workplace: string;
+    schoolNumber: number;
 
     constructor(user: User) {
         this.id = user.id;
@@ -114,5 +120,7 @@ export class UserCreateDto {
         this.password = user.password;
         this.status = user.status;
         this.userType = user.userType;
+        this.workplace = user.workplace;
+        this.schoolNumber = user.schoolNumber;
     }
 }

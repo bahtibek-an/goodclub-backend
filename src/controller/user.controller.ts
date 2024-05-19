@@ -53,7 +53,7 @@ class UserController {
                 userType,
                 workplace,
                 gender,
-                schoolNumber
+                schoolNumber,
             });
             return res.json(new UserDto("", updatedUser));
         } catch (e) {
