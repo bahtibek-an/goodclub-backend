@@ -83,7 +83,8 @@ class UserService {
             userType: user.userType,
             gender: user.gender,
             workplace: user.workplace,
-            status: UserStatus.ACTIVE
+            status: UserStatus.ACTIVE,
+            schoolNumber: user.schoolNumber,
         });
     }
 
@@ -99,7 +100,7 @@ class UserService {
             const lastNumber = lastUser.id;
             nextNumber = lastNumber + 1;
         }
-        const newUsername = `CefrUser${nextNumber.toString()}`;
+        const newUsername = `GCEFR-${nextNumber.toString()}`;
         const password = this.generatePassword();
 
         return await this.userRepository.save({username: newUsername, password});
