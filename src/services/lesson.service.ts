@@ -19,7 +19,11 @@ class LessonService {
     private readonly assignmentRepository: Repository<Assignment> = AppDataSource.getRepository(Assignment);
 
     public async initializeVideos(user: User) {
-        const lessons = await this.lessonRepository.find();
+        const lessons = await this.lessonRepository.find({
+            order: {
+                created_at: "ASC"
+            }
+        });
         for (const lesson of lessons) {
             const index = lessons.indexOf(lesson);
             const studentLesson = await this.studentLessonRepository.findOneBy({
