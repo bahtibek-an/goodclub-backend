@@ -10,6 +10,7 @@ import ApiError from "../exceptions/api.error.exception";
 import path from "node:path";
 import {Assignment} from "../entity/assignment.entity";
 import dotenv from "dotenv";
+
 dotenv.config();
 
 class LessonService {
@@ -74,7 +75,7 @@ class LessonService {
         if (!lesson) {
             throw ApiError.NotFoundError();
         }
-        if(videoName && lesson.status === LessonStatus.PROCESS) {
+        if (videoName && lesson.status === LessonStatus.PROCESS) {
             const originalVideoPath = this.getUploadDir(videoName);
             this.removeFile(originalVideoPath)
                 .then(() => {
@@ -85,10 +86,10 @@ class LessonService {
                 });
             throw ApiError.BadRequest("You cannot upload a new video if old lesson have status PROCESS");
         }
-        if(lesson.status === LessonStatus.PROCESS) {
+        if (lesson.status === LessonStatus.PROCESS) {
             throw ApiError.BadRequest("You cannot upload a new video if old lesson have status PROCESS");
         }
-        if(imageName) {
+        if (imageName) {
             const imagePath = this.getUploadDir(lesson.image);
             this.removeFile(imagePath)
                 .then(() => {
@@ -136,14 +137,16 @@ class LessonService {
         lesson.assignments = [];
         const updatedLesson = await this.lessonRepository.save(lesson)
 
-        const assignmentsList = assignments.map((item) => {
+        const assignmentsList = assignments?.map((item) => {
             const assignment = new Assignment();
             assignment.title = item.title;
             assignment.description = item.description;
             assignment.lesson = lesson;
             return assignment;
         });
-        await this.assignmentRepository.save(assignmentsList)
+        if (assignmentsList) {
+            await this.assignmentRepository.save(assignmentsList)
+        }
 
         return updatedLesson;
     }
@@ -240,7 +243,7 @@ class LessonService {
     }
 
     public async getLessonById(lessonId: number) {
-        return await this.lessonRepository.findOneBy({id: lessonId});
+        return await this.lessonRepository.findOne({where: {id: lessonId}, relations: ["assignments"]});
     }
 
     public async deleteLessonById(lessonId: number) {
