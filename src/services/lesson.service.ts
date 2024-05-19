@@ -238,6 +238,10 @@ class LessonService {
             }
         }
 
+        if (!nextLessonFound && currentLesson.id === studentLessons[studentLessons.length - 1].id) {
+            return;
+        }
+
         if (!nextLessonFound) {
             throw ApiError.NotFoundError();
         }
