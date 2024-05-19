@@ -41,6 +41,16 @@ class LessonService {
         }
     }
 
+    public async getStudentLesson(userId: number) {
+        return await this.studentLessonRepository.findOne({
+            where: {
+                user: {id: userId},
+                status: StudentLessonStatus.UNLOCKED,
+            },
+            relations: ["lesson", "lesson.assignments"],
+        })
+    }
+
     public async getStudentLessons(user: User) {
         await this.initializeVideos(user);
         return await this.studentLessonRepository.find({
