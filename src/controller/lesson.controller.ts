@@ -125,9 +125,6 @@ class LessonController {
         try {
             const userId = (req as RequestWithUser).user.id;
             const lesson = await this.lessonService.getStudentLesson(userId);
-            if (!lesson) {
-                throw ApiError.NotFoundError();
-            }
             return res.json(lesson);
         } catch (e) {
             next(e);
