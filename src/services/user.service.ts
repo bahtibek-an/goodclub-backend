@@ -13,30 +13,55 @@ class UserService {
         return await this.userRepository.findOneBy({ id: userId });
     }
 
+    // public async getUsers(offset: number, limit: number, status?: UserStatus, search?: string) {
+    //     const whereClause: FindOptionsWhere<User> = {
+    //         role: UserRole.USER,
+    //     }
+    //     if(status) {
+    //         whereClause.status = status;
+    //     }
+    //
+    //     if(search) {
+    //         whereClause.firstName = ILike(`%${search}%`);
+    //         whereClause.lastName = ILike(`%${search}%`);
+    //     }
+    //
+    //
+    //     const [users, total] = await this.userRepository.findAndCount({
+    //             where: whereClause,
+    //             skip: offset,
+    //             take: limit,
+    //             order: {
+    //                 created_at: "DESC"
+    //             }
+    //         }
+    //     );
+    //     return {data: users, count: total}
+    // }
+
     public async getUsers(offset: number, limit: number, status?: UserStatus, search?: string) {
-        const whereClause: FindOptionsWhere<User> = {
-            role: UserRole.USER,
-        }
-        if(status) {
-            whereClause.status = status;
-        }
+        let query = this.userRepository.createQueryBuilder('user');
 
-        if(search) {
-            whereClause.firstName = ILike(`%${search}%`);
-            whereClause.lastName = ILike(`%${search}%`);
+        query = query.where('user.role = :role', { role: UserRole.USER });
+
+        if (status) {
+            query = query.andWhere('user.status = :status', { status });
         }
 
+        if (search) {
+            query = query.andWhere(
+                '(user.firstName ILIKE :search OR user.lastName ILIKE :search)',
+                { search: `%${search}%` }
+            );
+        }
 
-        const [users, total] = await this.userRepository.findAndCount({
-                where: whereClause,
-                skip: offset,
-                take: limit,
-                order: {
-                    created_at: "DESC"
-                }
-            }
-        );
-        return {data: users, count: total}
+        const [users, total] = await query
+            .orderBy('user.created_at', 'DESC')
+            .skip(offset)
+            .take(limit)
+            .getManyAndCount();
+
+        return { data: users, count: total };
     }
 
     public async fillUserById(userId: number, user: Partial<User>) {
