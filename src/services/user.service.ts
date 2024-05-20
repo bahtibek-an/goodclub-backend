@@ -1,4 +1,4 @@
-import {FindOptionsWhere, ILike, Repository} from "typeorm";
+import {Repository} from "typeorm";
 import {GenderEnum, User, UserRole, UserStatus} from "../entity/user.entity";
 import {AppDataSource} from "../config/db.config";
 import {createHashPassword} from "../config/bcrypt.config";
@@ -10,7 +10,13 @@ class UserService {
     private readonly userRepository: Repository<User> = AppDataSource.getRepository(User);
 
     public async getUserById(userId: number) {
-        return await this.userRepository.findOneBy({ id: userId });
+        return await this.userRepository.findOne({
+            where: {
+                id: userId,
+                status: UserStatus.ACTIVE
+            },
+            relations: ["lessons", "lessons.lesson"]
+        });
     }
 
     // public async getUsers(offset: number, limit: number, status?: UserStatus, search?: string) {
@@ -42,16 +48,16 @@ class UserService {
     public async getUsers(offset: number, limit: number, status?: UserStatus, search?: string) {
         let query = this.userRepository.createQueryBuilder('user');
 
-        query = query.where('user.role = :role', { role: UserRole.USER });
+        query = query.where('user.role = :role', {role: UserRole.USER});
 
         if (status) {
-            query = query.andWhere('user.status = :status', { status });
+            query = query.andWhere('user.status = :status', {status});
         }
 
         if (search) {
             query = query.andWhere(
                 '(user.firstName ILIKE :search OR user.lastName ILIKE :search)',
-                { search: `%${search}%` }
+                {search: `%${search}%`}
             );
         }
 
@@ -61,15 +67,15 @@ class UserService {
             .take(limit)
             .getManyAndCount();
 
-        return { data: users, count: total };
+        return {data: users, count: total};
     }
 
     public async fillUserById(userId: number, user: Partial<User>) {
-        const updatedUser = await this.userRepository.findOneBy({ id: userId });
-        if(!updatedUser) {
+        const updatedUser = await this.userRepository.findOneBy({id: userId});
+        if (!updatedUser) {
             throw ApiError.UnauthorizedError();
         }
-        if(updatedUser.status === UserStatus.ACTIVE) {
+        if (updatedUser.status === UserStatus.ACTIVE) {
             throw ApiError.BadRequest("User already been activated");
         }
         return this.userRepository.save({
@@ -132,42 +138,42 @@ class UserService {
     }
 
     public async generateExcel() {
-        const users = await this.userRepository.find({ where: { role: UserRole.USER } });
+        const users = await this.userRepository.find({where: {role: UserRole.USER}});
         const workbook = new ExcelJS.Workbook();
         const worksheet = workbook.addWorksheet("Users", {
-            pageSetup: { fitToPage: true }
+            pageSetup: {fitToPage: true}
         });
         worksheet.autoFilter = {
             from: "A",
             to: "H"
         };
         worksheet.columns = [
-            { header: "ID", key: "col1", width: 25 },
-            { header: "username", key: "col2", width: 25 },
-            { header: "password", key: "col3", width: 25 },
-            { header: "First name", key: "col4", width: 25 },
-            { header: "Last name", key: "col5", width: 25 },
-            { header: "Phone number", key: "col6", width: 25 },
-            { header: "Date of birth", key: "col7", width: 25 },
-            { header: "Province", key: "col8", width: 25 },
-            { header: "District", key: "col9", width: 25 },
-            { header: "User type", key: "col10", width: 25 },
-            { header: "Gender", key: "col11", width: 25 },
-            { header: "Workplace", key: "col12", width: 25 },
-            { header: "Status", key: "col13", width: 25 },
-            { header: "School number", key: "col14", width: 25 },
+            {header: "ID", key: "col1", width: 25},
+            {header: "username", key: "col2", width: 25},
+            {header: "password", key: "col3", width: 25},
+            {header: "First name", key: "col4", width: 25},
+            {header: "Last name", key: "col5", width: 25},
+            {header: "Phone number", key: "col6", width: 25},
+            {header: "Date of birth", key: "col7", width: 25},
+            {header: "Province", key: "col8", width: 25},
+            {header: "District", key: "col9", width: 25},
+            {header: "User type", key: "col10", width: 25},
+            {header: "Gender", key: "col11", width: 25},
+            {header: "Workplace", key: "col12", width: 25},
+            {header: "Status", key: "col13", width: 25},
+            {header: "School number", key: "col14", width: 25},
         ];
         worksheet.getRow(1).eachCell((cell) => {
             cell.fill = {
                 type: "pattern",
                 pattern: "solid",
-                fgColor: { argb: "5B9BD5" }
+                fgColor: {argb: "5B9BD5"}
             };
             cell.border = {
-                top: { style: "thin" },
-                left: { style: "thin" },
-                bottom: { style: "thin" },
-                right: { style: "thin" }
+                top: {style: "thin"},
+                left: {style: "thin"},
+                bottom: {style: "thin"},
+                right: {style: "thin"}
             };
         });
         users.forEach((user, index) => {
@@ -193,7 +199,7 @@ class UserService {
                     cell.fill = {
                         type: "pattern",
                         pattern: "solid",
-                        fgColor: { argb: "DDEBF7" }
+                        fgColor: {argb: "DDEBF7"}
                     };
                 });
             }

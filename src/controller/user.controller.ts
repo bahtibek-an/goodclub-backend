@@ -1,4 +1,4 @@
-import express, {Request, Response, NextFunction} from "express";
+import express, {NextFunction, Request, Response} from "express";
 import UserService from "../services/user.service";
 import {UserCreateDto, UserDto} from "../dto/user.dto";
 import {User, UserStatus} from "../entity/user.entity";
@@ -6,6 +6,7 @@ import RequestWithBody from "../interfaces/RequstWithBody.interface";
 import RequestWithUser from "../interfaces/RequestWithUser.interface";
 import {validationResult} from "express-validator";
 import ApiError from "../exceptions/api.error.exception";
+import {StudentLessonStatus} from "../entity/student.lesson.entity";
 
 
 class UserController {
@@ -102,6 +103,7 @@ class UserController {
             if(!user) {
                 throw ApiError.NotFoundError();
             }
+            (user as any).currentLesson  = user.lessons.find((item) => item.status === StudentLessonStatus.UNLOCKED);
             return res.json(user);
         } catch (e) {
             next(e);
