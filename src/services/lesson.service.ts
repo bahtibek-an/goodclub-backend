@@ -10,7 +10,6 @@ import ApiError from "../exceptions/api.error.exception";
 import path from "node:path";
 import {Assignment} from "../entity/assignment.entity";
 import dotenv from "dotenv";
-
 dotenv.config();
 
 class LessonService {
