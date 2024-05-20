@@ -42,13 +42,22 @@ class LessonService {
     }
 
     public async getStudentLesson(userId: number) {
-        return await this.studentLessonRepository.findOne({
+        const lesson = await this.studentLessonRepository.findOne({
             where: {
                 user: {id: userId},
-                status: StudentLessonStatus.UNLOCKED,
             },
             relations: ["lesson", "lesson.assignments"],
         })
+        if(!lesson) {
+            throw ApiError.NotFoundError();
+        }
+        if(lesson.lesson.isAlwaysOpened) {
+            return lesson;
+        }
+        if(lesson.status !== StudentLessonStatus.UNLOCKED) {
+            throw ApiError.ForbiddenError();
+        }
+        return lesson;
     }
 
     public async getStudentLessons(user: User) {
@@ -72,7 +81,8 @@ class LessonService {
                                   author,
                                   qualification,
                                   assignments,
-                                  videoName
+                                  videoName,
+                                  isAlwaysOpened
                               }: {
         lessonId: number,
         title: string,
@@ -82,6 +92,7 @@ class LessonService {
         qualification: string,
         assignments: Assignment[],
         videoName: string | null | undefined,
+        isAlwaysOpened: boolean,
     }) {
         const lesson = await this.lessonRepository.findOneBy({
             id: lessonId,
@@ -148,6 +159,7 @@ class LessonService {
         lesson.author = author;
         lesson.qualification = qualification;
         lesson.qualification = qualification;
+        lesson.isAlwaysOpened = isAlwaysOpened;
         lesson.assignments = [];
         const updatedLesson = await this.lessonRepository.save(lesson)
 
@@ -165,7 +177,7 @@ class LessonService {
         return updatedLesson;
     }
 
-    public async saveLesson({title, description, imageName, author, qualification, assignments, videoName}: {
+    public async saveLesson({title, description, imageName, author, qualification, assignments, videoName, isAlwaysOpened}: {
         title: string,
         description: string,
         imageName: string,
@@ -173,6 +185,7 @@ class LessonService {
         qualification: string,
         assignments: Assignment[],
         videoName: string,
+        isAlwaysOpened: boolean,
     }) {
         const videoPath = this.getUploadDir(videoName);
         const lesson = await this.createLesson({
@@ -182,6 +195,7 @@ class LessonService {
             author: author,
             qualification: qualification,
             assignments: [],
+            isAlwaysOpened: isAlwaysOpened,
             // order: order
             order: 0,
         });

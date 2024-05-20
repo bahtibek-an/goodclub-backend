@@ -16,6 +16,9 @@ export const lessonValidator = [
     // check("order")
     //     .isNumeric()
     //     .withMessage('Order must be a number'),
+    check("isAlwaysOpened")
+        .isBoolean()
+        .withMessage('isAlwaysOpened must be a boolean'),
     check("qualification")
         .isString()
         .withMessage('Description must be a string'),
@@ -35,6 +38,9 @@ export const lessonUpdateValidator = [
     check("author")
         .isString()
         .withMessage('Description must be a string'),
+    check("isAlwaysOpened")
+        .isBoolean()
+        .withMessage('isAlwaysOpened must be a boolean'),
     check("qualification")
         .isString()
         .withMessage('Description must be a string'),
@@ -51,4 +57,5 @@ export class LessonDto {
     qualification: string;
     order: number;
     assignments: Assignment[];
+    isAlwaysOpened: boolean;
 }

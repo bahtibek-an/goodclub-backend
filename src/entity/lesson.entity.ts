@@ -43,6 +43,9 @@ export class Lesson {
     @Column({ type: "decimal", nullable: false, default: 0 })
     public order: number;
 
+    @Column({ type: "boolean", default: false })
+    public isAlwaysOpened: boolean;
+
     @OneToMany(() => Assignment, assignment => assignment.lesson)
     public assignments: Assignment[];
 

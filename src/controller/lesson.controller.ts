@@ -24,12 +24,12 @@ class LessonController {
             if (!errors.isEmpty()) {
                 throw ApiError.BadRequest("error", errors.array());
             }
-            const {title, description, author, qualification, order, assignments: assignmentsBody} = req.body;
+            const {title, description, author, qualification, order, assignments: assignmentsBody, isAlwaysOpened} = req.body;
             const files = req.files as any;
             const videoName = files.video?.[0]?.filename;
             const imageName = files.image?.[0]?.filename;
             const assignments = assignmentsBody?.map((assignment) => JSON.parse(assignment as unknown as string)) || [];
-            if(!imageName && videoName) {
+            if (!imageName && videoName) {
                 const videoPath = this.lessonService.getUploadDir(videoName);
                 this.lessonService.removeFile(videoPath)
                     .then(() => {
@@ -53,6 +53,7 @@ class LessonController {
                 assignments: assignments,
                 videoName: videoName,
                 imageName: imageName,
+                isAlwaysOpened: isAlwaysOpened
             });
             return res.status(201).json(lesson);
         } catch (e) {
@@ -66,8 +67,8 @@ class LessonController {
             if (!errors.isEmpty()) {
                 throw ApiError.BadRequest("error", errors.array());
             }
-            const { id } = req.params;
-            const {title, description, author, qualification, order, assignments: assignmentsBody} = req.body;
+            const {id} = req.params;
+            const {title, description, author, qualification, order, assignments: assignmentsBody, isAlwaysOpened} = req.body;
             const files = req.files as any;
             const videoName = files.video?.[0]?.filename;
             const imageName = files.image?.[0]?.filename;
@@ -80,7 +81,8 @@ class LessonController {
                 author: author,
                 qualification: qualification,
                 assignments: assignments,
-                videoName: videoName
+                videoName: videoName,
+                isAlwaysOpened: isAlwaysOpened
             });
             return res.status(201).json(lesson);
         } catch (e) {
@@ -90,7 +92,7 @@ class LessonController {
 
     public deleteLesson = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { id } = req.params;
+            const {id} = req.params;
             const lesson = await this.lessonService.deleteLessonById(+id);
             return res.json(lesson);
         } catch (e) {
