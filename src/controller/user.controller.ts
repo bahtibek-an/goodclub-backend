@@ -103,7 +103,12 @@ class UserController {
             if(!user) {
                 throw ApiError.NotFoundError();
             }
-            (user as any).currentLesson  = user.lessons.find((item) => item.status === StudentLessonStatus.UNLOCKED);
+            const currentLesson = user.lessons.find((item) => item.status === StudentLessonStatus.UNLOCKED);
+            if(currentLesson) {
+                (user as any).currentLesson = { title: currentLesson.lesson.title }
+            } else {
+                (user as any).currentLesson = { title: "All lessons are finished" }
+            }
             return res.json(user);
         } catch (e) {
             next(e);
