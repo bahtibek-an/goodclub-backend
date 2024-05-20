@@ -228,9 +228,6 @@ class LessonService {
         if(!currentLesson) {
             throw ApiError.NotFoundError();
         }
-        if(currentLesson.lesson.isAlwaysOpened) {
-            return;
-        }
         if (currentLesson.status !== StudentLessonStatus.UNLOCKED) {
             throw ApiError.ForbiddenError();
         }
