@@ -1,10 +1,7 @@
 import {AppDataSource} from "./config/db.config";
 import app from "./app";
 import dotenv from "dotenv";
-import https from "node:https";
 import http from "node:http";
-import fs from "node:fs";
-import path from "node:path";
 import UserService from "./services/user.service";
 
 const PORT = process.env.PORT || 5000;
