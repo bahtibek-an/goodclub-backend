@@ -27,6 +27,7 @@ class UserController {
 
     public getAdmin = async (req: Request, res: Response, next: NextFunction) => {
         try {
+            console.log("--------")
             const userId = (req as RequestWithUser).user.id;
             const user = await this.userService.getAdminById(userId);
             if (!user) {

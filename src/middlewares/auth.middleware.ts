@@ -19,7 +19,7 @@ export default function authMiddleware(req: Request, res: Response, next: NextFu
         if (!user) {
             return next(ApiError.UnauthorizedError());
         }
-        (req as RequestWithUser).user = user;
+        ;(req as RequestWithUser).user = user;
         next();
     } catch (e) {
         next(ApiError.UnauthorizedError());
