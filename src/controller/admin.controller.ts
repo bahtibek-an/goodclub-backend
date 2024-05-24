@@ -1,5 +1,6 @@
 import AdminService from "../services/admin.service";
 import {Request, Response, NextFunction} from "express";
+import RequestWithUser from "../interfaces/RequestWithUser.interface";
 
 
 class AdminController {
@@ -17,6 +18,7 @@ class AdminController {
             next(e);
         }
     }
+
 }
 
 export default AdminController;

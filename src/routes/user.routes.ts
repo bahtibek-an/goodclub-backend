@@ -4,6 +4,7 @@ import authMiddleware from "../middlewares/auth.middleware";
 import roleMiddleware from "../middlewares/role.middleware";
 import {UserRole} from "../entity/user.entity";
 import {fillUserValidator} from "../dto/user.dto";
+import adminController from "../controller/admin.controller";
 
 const userRoutes = Router();
 
@@ -15,5 +16,8 @@ userRoutes.post("/fill-user", authMiddleware, fillUserValidator, userController.
 userRoutes.get("/generate-excel", authMiddleware, roleMiddleware(UserRole.ADMIN), userController.getExcelOfStudents);
 userRoutes.get("/:id", authMiddleware, roleMiddleware(UserRole.ADMIN), userController.getStudentById)
 
+// admin routes
+userRoutes.get("/admin", authMiddleware, roleMiddleware(UserRole.ADMIN), userController.getAdmin);
+userRoutes.put("/admin", authMiddleware, roleMiddleware(UserRole.ADMIN), userController.updateAdmin);
 
 export default userRoutes;

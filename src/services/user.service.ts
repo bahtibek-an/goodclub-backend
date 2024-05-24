@@ -19,31 +19,25 @@ class UserService {
         });
     }
 
-    // public async getUsers(offset: number, limit: number, status?: UserStatus, search?: string) {
-    //     const whereClause: FindOptionsWhere<User> = {
-    //         role: UserRole.USER,
-    //     }
-    //     if(status) {
-    //         whereClause.status = status;
-    //     }
-    //
-    //     if(search) {
-    //         whereClause.firstName = ILike(`%${search}%`);
-    //         whereClause.lastName = ILike(`%${search}%`);
-    //     }
-    //
-    //
-    //     const [users, total] = await this.userRepository.findAndCount({
-    //             where: whereClause,
-    //             skip: offset,
-    //             take: limit,
-    //             order: {
-    //                 created_at: "DESC"
-    //             }
-    //         }
-    //     );
-    //     return {data: users, count: total}
-    // }
+    public getAdminById =  async (userId: number) => {
+        return await this.userRepository.findOneBy({
+            id: userId,
+            role: UserRole.ADMIN,
+        });
+    }
+
+    public updateAdminById = async (userId: number, username: string, password: string) => {
+        const user = await this.userRepository.findOneBy({
+            id: userId,
+            role: UserRole.ADMIN,
+        });
+        return await this.userRepository.save({
+            ...user,
+            username: username,
+            password: password,
+        });
+    }
+
 
     public async getUsers(offset: number, limit: number, status?: UserStatus, search?: string) {
         let query = this.userRepository.createQueryBuilder('user');

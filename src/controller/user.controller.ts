@@ -25,7 +25,31 @@ class UserController {
         }
     }
 
-    fillUser = async (req: RequestWithBody<User>, res: express.Response, next: NextFunction) => {
+    public getAdmin = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const userId = (req as RequestWithUser).user.id;
+            const user = await this.userService.getAdminById(userId);
+            if (!user) {
+                throw ApiError.NotFoundError();
+            }
+            return res.json(user);
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    public updateAdmin = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { username, password, } = req.body;
+            const userId = (req as RequestWithUser).user.id;
+            const user = await this.userService.updateAdminById(userId, username, password);
+            return res.json(user);
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    public fillUser = async (req: RequestWithBody<User>, res: express.Response, next: NextFunction) => {
         try {
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
