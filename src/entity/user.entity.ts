@@ -54,6 +54,26 @@ export class User {
     @Column({type: 'varchar', length: 255, nullable: true})
     public district: string;
 
+
+
+    // admin data
+
+    @Column({type: 'varchar', length: 255, nullable: true})
+    public companyName: string;
+
+    @Column({type: 'varchar', length: 255, nullable: true})
+    public inn: string;
+
+    @Column({type: 'varchar', length: 255, nullable: true})
+    public contact: string;
+
+    @Column({type: 'varchar', length: 255, nullable: true})
+    public email: string;
+
+
+
+
+
     @Column({type: 'enum', enum: UserType, default: UserType.STUDENT})
     public userType: UserType;
 

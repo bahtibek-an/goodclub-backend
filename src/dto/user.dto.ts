@@ -89,6 +89,16 @@ export class UserDto {
     }
 }
 
+
+export class AdminUpdateDto {
+    public firstName: string;
+    public lastName: string;
+    public inn: string;
+    public companyName: string;
+    public contact: string;
+    public email: string;
+}
+
 export class UserCreateDto {
     id: number;
     firstName: string | null;

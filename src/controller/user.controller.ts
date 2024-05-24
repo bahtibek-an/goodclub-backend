@@ -27,7 +27,6 @@ class UserController {
 
     public getAdmin = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            console.log("--------")
             const userId = (req as RequestWithUser).user.id;
             const user = await this.userService.getAdminById(userId);
             if (!user) {
@@ -41,9 +40,31 @@ class UserController {
 
     public updateAdmin = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const { username, password, } = req.body;
+            const { firstName, lastName, inn, companyName, contact, email } = req.body;
             const userId = (req as RequestWithUser).user.id;
-            const user = await this.userService.updateAdminById(userId, username, password);
+            const user = await this.userService.updateAdminById(userId, {
+                firstName,
+                lastName,
+                inn,
+                companyName,
+                contact,
+                email
+            });
+            return res.json(user);
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    public updateAdminPassword = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const { old_password, password, confirm_password } = req.body;
+            const userId = (req as RequestWithUser).user.id;
+            const user = await this.userService.updateAdminPasswordById(userId, {
+                old_password,
+                password,
+                confirm_password
+            });
             return res.json(user);
         } catch (e) {
             next(e);

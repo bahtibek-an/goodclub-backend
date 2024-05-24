@@ -4,7 +4,6 @@ import authMiddleware from "../middlewares/auth.middleware";
 import roleMiddleware from "../middlewares/role.middleware";
 import {UserRole} from "../entity/user.entity";
 import {fillUserValidator} from "../dto/user.dto";
-import adminController from "../controller/admin.controller";
 
 const userRoutes = Router();
 
@@ -13,6 +12,7 @@ const userController = new UserController();
 // admin routes
 userRoutes.get("/admin", authMiddleware, roleMiddleware(UserRole.ADMIN), userController.getAdmin);
 userRoutes.put("/admin", authMiddleware, roleMiddleware(UserRole.ADMIN), userController.updateAdmin);
+userRoutes.put("/change-password", authMiddleware, roleMiddleware(UserRole.ADMIN), userController.updateAdminPassword);
 
 userRoutes.get("/", authMiddleware, roleMiddleware(UserRole.ADMIN), userController.getAllUsers);
 userRoutes.post("/create", authMiddleware, roleMiddleware(UserRole.ADMIN), userController.createUser);

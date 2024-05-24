@@ -4,6 +4,8 @@ import {AppDataSource} from "../config/db.config";
 import {createHashPassword} from "../config/bcrypt.config";
 import ApiError from "../exceptions/api.error.exception";
 import * as ExcelJS from "exceljs";
+import {AdminUpdateDto} from "../dto/user.dto";
+import bcrypt from "bcrypt";
 
 
 class UserService {
@@ -19,6 +21,36 @@ class UserService {
         });
     }
 
+    public updateAdminPasswordById = async (userId: number, {
+        old_password,
+        password,
+        confirm_password
+    }: {
+        old_password: string,
+        password: string,
+        confirm_password: string,
+    }) => {
+        const user = await this.userRepository.findOneBy({
+            id: userId,
+            role: UserRole.ADMIN,
+        });
+        if(!user) {
+            throw ApiError.NotFoundError();
+        }
+        const isEqualPassword = await bcrypt.compare(old_password, user.password!);
+        if(!isEqualPassword) {
+            throw ApiError.BadRequest("Wrong old password");
+        }
+        if(password !== confirm_password) {
+            throw ApiError.BadRequest("Wrong password");
+        }
+        const hashPassword = await createHashPassword(password);
+        return await this.userRepository.save({
+            ...user,
+            password: hashPassword,
+        });
+    }
+
     public getAdminById =  async (userId: number) => {
         return await this.userRepository.findOneBy({
             id: userId,
@@ -26,15 +58,19 @@ class UserService {
         });
     }
 
-    public updateAdminById = async (userId: number, username: string, password: string) => {
+    public updateAdminById = async (userId: number, userData: AdminUpdateDto) => {
         const user = await this.userRepository.findOneBy({
             id: userId,
             role: UserRole.ADMIN,
         });
         return await this.userRepository.save({
             ...user,
-            username: username,
-            password: password,
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            inn: userData.inn,
+            companyName: userData.companyName,
+            contact: userData.contact,
+            email: userData.email,
         });
     }
 
