@@ -58,16 +58,16 @@ export class User {
 
     // admin data
 
-    @Column({type: 'varchar', length: 255, nullable: true})
+    @Column({type: 'varchar', length: 255, nullable: true, default: ""})
     public companyName: string;
 
-    @Column({type: 'varchar', length: 255, nullable: true})
+    @Column({type: 'varchar', length: 255, nullable: true, default: ""})
     public inn: string;
 
-    @Column({type: 'varchar', length: 255, nullable: true})
+    @Column({type: 'varchar', length: 255, nullable: true, default: ""})
     public contact: string;
 
-    @Column({type: 'varchar', length: 255, nullable: true})
+    @Column({type: 'varchar', length: 255, nullable: true, default: ""})
     public email: string;
 
 
