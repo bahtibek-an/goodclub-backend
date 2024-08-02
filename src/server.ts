@@ -11,8 +11,6 @@ const httpServer = http.createServer(app);
 ;(async () => {
     try {
         await AppDataSource.initialize();
-        // const userService = new UserService();
-        // await userService.createAdmin();
         httpServer.listen(PORT, () => {
             console.log(`Listening on port ${PORT}`)
         });
