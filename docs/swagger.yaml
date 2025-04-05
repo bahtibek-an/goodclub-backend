@@ -1,0 +1,551 @@
+openapi: "3.0.0"
+info:
+  title: "WitApps API for payment service"
+  version: "1.0.0"
+  description: "Payment API"
+servers:
+  - url: "https://api.goodclub.uz"
+    description: "GoodClub Основной продакшен сервер"
+  - url: "http://localhost:4000"
+    description: "GoodClub Локальный сервер"
+paths:
+  /api/v1/users/fill-user:
+    post:
+      summary: "Заполнение профиля"
+      tags:
+        - "User"
+      description: "Чтобы создать пользователя нужно права админа"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                  example: "First name"
+                lastName:
+                  type: string
+                  example: "lastName"
+                phoneNumber:
+                  type: string
+                  example: "+998998552572"
+                dateOfBirth:
+                  type: string
+                  example: "1995-12-17"
+                province:
+                  type: string
+                  example: "Province"
+                district:
+                  type: string
+                  example: "District"
+                userType:
+                  type: string
+                  example: "STUDENT|TEACHER|OTHERS"
+                gender:
+                  type: string
+                  example: "MALE|FEMALE"
+                workplace:
+                  type: string
+                  example: "Workplace is required if user type is OTHERS"
+                schoolNumber:
+                  type: string
+                  example: "School number is required if user type is TEACHER"
+      responses:
+        '200':
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                    example: "accessToken"
+                  refreshToken:
+                    type: string
+                    example: "refreshToken"
+                  user:
+                    $ref: "#/components/schemas/User"
+
+        '401':
+          description: "Пользователя не существует"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "User not authorized"
+                  status:
+                    type: array
+        '400':
+          description: "Ответ с ошибкой если не все данные отправлены или не валидны."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "error"
+                    description: "Статус ответа."
+                  status:
+                    type: string
+                    example: "400"
+                    description: "Статус ошибки"
+        '500':
+          description: "Ошибка сервера."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Internal server error"
+                    description: "Сообщение об ошибке."
+  /api/v1/auth/login:
+    post:
+      summary: "Логин"
+      tags:
+        - "Authentication"
+      description: "Чтобы создать пользователя нужно права админа"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: "username"
+                password:
+                  type: string
+                  format: password
+                  example: "password"
+              required:
+                - email
+                - password
+      responses:
+        '200':
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                    example: "accessToken"
+                  refreshToken:
+                    type: string
+                    example: "refreshToken"
+                  user:
+                    $ref: "#/components/schemas/User"
+
+        '401':
+          description: "Пользователя не существует"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "User not authorized"
+                  status:
+                    type: array
+        '400':
+          description: "Ответ с ошибкой если не все данные отправлены или не валидны."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "error"
+                    description: "Статус ответа."
+                  status:
+                    type: string
+                    example: "400"
+                    description: "Статус ошибки"
+        '500':
+          description: "Ошибка сервера."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Internal server error"
+                    description: "Сообщение об ошибке."
+  /api/v1/auth/refresh:
+    post:
+      summary: "Обновление accessToken с использование refreshToken и получение пользователя"
+      tags:
+        - "Authentication"
+      description: ""
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                refreshToken:
+                  type: string
+                  example: "Refresh token"
+              required:
+                - refreshToken
+      responses:
+        '200':
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                    example: "accessToken"
+                  refreshToken:
+                    type: string
+                    example: "refreshToken"
+                  user:
+                    $ref: "#/components/schemas/User"
+        '400':
+          description: "Ответ с ошибкой если не все данные отправлены или не валидны."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "error"
+                    description: "Статус ответа."
+                  status:
+                    type: string
+                    example: "400"
+                    description: "Статус ошибки"
+        '500':
+          description: "Ошибка сервера."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Internal server error"
+                    description: "Сообщение об ошибке."
+  /api/v1/auth/login-admin:
+    post:
+      summary: "Авторизация как админ"
+      tags:
+        - "Authentication"
+      description: ""
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  example: "username"
+                password:
+                  type: string
+                  example: "password"
+              required:
+                - username
+                - password
+      responses:
+        '200':
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                    example: "accessToken"
+                  user:
+                    $ref: "#/components/schemas/User"
+
+        '401':
+          description: "Пользователя не существует"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "User not authorized"
+                  status:
+                    type: array
+        '400':
+          description: "Ответ с ошибкой если не все данные отправлены или не валидны."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "error"
+                    description: "Статус ответа."
+                  status:
+                    type: string
+                    example: "400"
+                    description: "Статус ошибки"
+        '500':
+          description: "Ошибка сервера."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Internal server error"
+                    description: "Сообщение об ошибке."
+  /api/v1/lesson/student:
+    get:
+      summary: "Получение уроков студента"
+      tags:
+        - "Lesson"
+      security:
+        - bearerAuth: []
+      description: "Если у урока статус LOCKED тогда эти уроки закрытые, UNLOCKED текущий урок, COMPLETED заверщенные, isAlwaysOpened означает то что урок открыть полностью не смотря на статус COMPLETED или LOCKED"
+      responses:
+        '200':
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                    example: "accessToken"
+                  user:
+                    $ref: "#/components/schemas/User"
+        '500':
+          description: "Ошибка сервера."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Internal server error"
+                    description: "Сообщение об ошибке."
+  /api/v1/lesson/current-lesson:
+    get:
+      summary: "Получение текущего урока"
+      tags:
+        - "Lesson"
+      security:
+        - bearerAuth: [ ]
+      description: ""
+      responses:
+        '200':
+          description: ""
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Lesson"
+        '500':
+          description: "Ошибка сервера."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Internal server error"
+                    description: "Сообщение об ошибке."
+  /api/v1/lesson/complete/{id}:
+    post:
+      summary: "Закрыть урок по lesson id"
+      tags:
+        - "Lesson"
+      description: ""
+      responses:
+        '200':
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Lesson completed and next lesson unlocked"
+        '404':
+          description: "Урок не найден"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Not found"
+                    description: "Статус ответа."
+                  status:
+                    type: string
+                    example: "404"
+                    description: "Статус ошибки"
+        '403':
+          description: "Урок в статусе COMPLETED или LOCKED"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Forbidden"
+                    description: "Статус ответа."
+                  status:
+                    type: string
+                    example: "404"
+                    description: "Статус ошибки"
+        '500':
+          description: "Ошибка сервера."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Internal server error"
+                    description: "Сообщение об ошибке."
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: number
+          example: ""
+        firstName:
+          type: string
+          example: ""
+        lastName:
+          type: string
+          example: ""
+        username:
+          type: string
+          example: ""
+        role:
+          type: string
+          example: "ADMIN|USER"
+        gender:
+          type: string
+          example: "MALE|FEMALE"
+        status:
+          type: number
+          example: "ACTIVE|PENDING"
+        schoolNumber:
+          type: number
+          example: ""
+        workplace:
+          type: string
+          example: ""
+    Lesson:
+      type: object
+      properties:
+        id:
+          type: number
+          example: ""
+        status:
+          type: string
+          example: "LOCKED|UNLOCKED|COMPLETED"
+        lesson:
+          type: object
+          properties:
+            id:
+              type: number
+            video720p:
+              type: string
+              description: "Нужно поставить в начало домен сайта и затем видео (http://localhost:4000/video720p)"
+            video360p:
+              type: string
+              description: "Нужно поставить в начало домен сайта и затем видео (http://localhost:4000/video720p)"
+            duration:
+              type: string
+              example: "5441.303"
+              description: "Длительность видео в минутах"
+            image:
+              type: string
+              description: "Нужно поставить в начало домен сайта и затем картинку (http://localhost:4000/image)"
+            title:
+              type: string
+              example: ""
+            status:
+              type: string
+              example: "ACTIVE|PROCESS|BLOCK"
+            description:
+              type: string
+              example: ""
+            author:
+              type: string
+              example: ""
+            qualification:
+              type: string
+              example: ""
+            order:
+              type: string
+              example: "0"
+            isAlwaysOpened:
+              type: boolean
+              example: "true|false"
+            created_at:
+              type: string
+              example: "2024-06-25T05:38:56.835Z"
+            updated_at:
+              type: string
+              example: "2024-06-25T05:38:56.835Z"
+            assignments:
+              type: array
+              items:
+                $ref: "#/components/schemas/Assignment"
+    Assignment:
+      type: object
+      properties:
+        id:
+          type: number
+        title:
+          type: string
+          example: ""
+        description:
+          type: string
+          example: ""
+        created_at:
+          type: string
+          example: "2024-06-25T05:38:56.835Z"
+        updated_at:
+          type: string
+          example: "2024-06-25T05:38:56.835Z"
+security:
+  - bearerAuth: []

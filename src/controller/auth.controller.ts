@@ -39,7 +39,7 @@ class AuthController {
                 sameSite: "none",
                 secure: true,
             });
-            return res.json(user);
+            return res.json({...user, refreshToken: refreshToken});
         } catch (e) {
             next(e);
         }
@@ -88,7 +88,7 @@ class AuthController {
 
     refresh = async (req: RequestWithCookies, res: express.Response, next: NextFunction) => {
         try {
-            const {refreshToken} = req.cookies;
+            const refreshToken = req.body.refreshToken || req.cookies.refreshToken;
             const user = await this.authService.refresh(refreshToken);
             const newRefreshToken = await this.jwtConfig.createRefreshToken({
                 id: user.user.id,
@@ -102,7 +102,7 @@ class AuthController {
                 sameSite: "none",
                 secure: true
             });
-            return res.json(user);
+            return res.json({...user, refreshToken: newRefreshToken});
         } catch (e) {
             next(e);
         }

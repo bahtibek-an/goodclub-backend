@@ -11,5 +11,6 @@ authRoutes.post("/login", loginValidator, authController.login);
 authRoutes.post("/login-admin", loginValidator, authController.loginAdmin);
 authRoutes.delete("/logout", authController.logout)
 authRoutes.get("/refresh", authController.refresh);
+authRoutes.post("/refresh", authController.refresh);
 
 export default authRoutes;

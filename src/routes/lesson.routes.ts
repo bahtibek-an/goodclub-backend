@@ -9,7 +9,6 @@ import {lessonUpdateValidator, lessonValidator} from "../dto/lesson.dto";
 const lessonRoutes = Router();
 const lessonController = new LessonController();
 
-
 // Routes for user
 lessonRoutes.get("/student", authMiddleware, roleMiddleware(UserRole.USER), lessonController.getStudentLessons);
 lessonRoutes.get("/current-lesson", authMiddleware, roleMiddleware(UserRole.USER), lessonController.getStudentLesson)

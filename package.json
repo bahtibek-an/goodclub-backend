@@ -20,6 +20,7 @@
     "dotenv": "^16.4.5",
     "exceljs": "^4.4.0",
     "express": "^4.19.2",
+    "express-basic-auth": "^1.2.1",
     "express-validator": "^7.0.1",
     "fluent-ffmpeg": "^2.1.2",
     "jsonwebtoken": "^9.0.2",
@@ -27,8 +28,10 @@
     "multer": "^1.4.5-lts.1",
     "pg": "^8.11.5",
     "reflect-metadata": "^0.2.2",
+    "swagger-ui-express": "^5.0.1",
     "typeorm": "^0.3.20",
-    "uuid": "^9.0.1"
+    "uuid": "^9.0.1",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
@@ -40,7 +43,9 @@
     "@types/morgan": "^1.9.9",
     "@types/multer": "^1.4.11",
     "@types/node": "^20.12.8",
+    "@types/swagger-ui-express": "^4.1.8",
     "@types/uuid": "^9.0.8",
+    "@types/yamljs": "^0.2.34",
     "i": "^0.3.7",
     "nodemon": "^3.1.0",
     "npm": "^10.7.0",

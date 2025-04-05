@@ -16,9 +16,10 @@ userRoutes.put("/change-password", authMiddleware, roleMiddleware(UserRole.ADMIN
 
 userRoutes.get("/", authMiddleware, roleMiddleware(UserRole.ADMIN), userController.getAllUsers);
 userRoutes.post("/create", authMiddleware, roleMiddleware(UserRole.ADMIN), userController.createUser);
-userRoutes.post("/fill-user", authMiddleware, fillUserValidator, userController.fillUser);
 userRoutes.get("/generate-excel", authMiddleware, roleMiddleware(UserRole.ADMIN), userController.getExcelOfStudents);
 userRoutes.get("/:id", authMiddleware, roleMiddleware(UserRole.ADMIN), userController.getStudentById)
+
+userRoutes.post("/fill-user", authMiddleware, fillUserValidator, userController.fillUser);
 
 
 export default userRoutes;

@@ -153,7 +153,7 @@ class LessonController {
             const {id: lessonId} = req.params;
             const userId = (req as RequestWithUser).user.id;
             await this.lessonService.completeLesson(userId, +lessonId);
-            return res.json({message: "Lesson completed and next lesson is unlocked"});
+            return res.json({message: "Lesson completed and next lesson unlocked"});
         } catch (e) {
             next(e);
         }

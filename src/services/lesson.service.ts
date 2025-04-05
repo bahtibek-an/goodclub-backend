@@ -4,7 +4,7 @@ import {Lesson, LessonStatus} from "../entity/lesson.entity";
 import {LessonDto} from "../dto/lesson.dto";
 import fs from "node:fs";
 import ffmpeg from "fluent-ffmpeg";
-import {User} from "../entity/user.entity";
+import {User, UserStatus} from "../entity/user.entity";
 import {StudentLesson, StudentLessonStatus} from "../entity/student.lesson.entity";
 import ApiError from "../exceptions/api.error.exception";
 import path from "node:path";
@@ -44,6 +44,7 @@ class LessonService {
         const lesson = await this.studentLessonRepository.findOne({
             where: {
                 user: {id: userId},
+                status: StudentLessonStatus.UNLOCKED
             },
             relations: ["lesson", "lesson.assignments"],
         })
