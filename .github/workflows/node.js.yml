@@ -8,8 +8,15 @@ jobs:
   build:
     runs-on: self-hosted
     steps:
-    - run: npm run build
-    - run: |
-        touch .env
-        echo "${{ secrets.PROD_ENV_FILE }}" > .env
-    - run: pm2 restart api-goodclub
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.13.1'
+      - run: npm ci
+      - run: npx npm install
+      - run: npm run build
+      - run: |
+          touch .env
+          echo "${{ secrets.PROD_ENV_FILE }}" > .env
+      - run: pm2 restart api-goodclub
