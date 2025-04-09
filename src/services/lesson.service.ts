@@ -274,7 +274,11 @@ class LessonService {
     }
 
     public async getAllLessons() {
-        return await this.lessonRepository.find();
+        return await this.lessonRepository.find({
+            order: {
+                created_at: "ASC"
+            }
+        });
     }
 
     public async getLessonById(lessonId: number) {
