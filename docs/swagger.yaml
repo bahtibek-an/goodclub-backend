@@ -337,7 +337,7 @@ paths:
                 properties:
                   user:
                     items:
-                      $ref: "#/components/schemas/Lesson"
+                      $ref: "#/components/schemas/RawLesson"
   /api/v1/lesson/student:
     get:
       summary: "Получение уроков студента"
@@ -503,55 +503,52 @@ components:
     RawLesson:
       type: object
       properties:
-        lesson:
-          type: object
-          properties:
-            id:
-              type: number
-            video720p:
-              type: string
-              description: "Нужно поставить в начало домен сайта и затем видео (http://localhost:4000/video720p)"
-            video360p:
-              type: string
-              description: "Нужно поставить в начало домен сайта и затем видео (http://localhost:4000/video720p)"
-            duration:
-              type: string
-              example: "5441.303"
-              description: "Длительность видео в минутах"
-            image:
-              type: string
-              description: "Нужно поставить в начало домен сайта и затем картинку (http://localhost:4000/image)"
-            title:
-              type: string
-              example: ""
-            status:
-              type: string
-              example: "ACTIVE|PROCESS|BLOCK"
-            description:
-              type: string
-              example: ""
-            author:
-              type: string
-              example: ""
-            qualification:
-              type: string
-              example: ""
-            order:
-              type: string
-              example: "0"
-            isAlwaysOpened:
-              type: boolean
-              example: "true|false"
-            created_at:
-              type: string
-              example: "2024-06-25T05:38:56.835Z"
-            updated_at:
-              type: string
-              example: "2024-06-25T05:38:56.835Z"
-            assignments:
-              type: array
-              items:
-                $ref: "#/components/schemas/Assignment"
+        id:
+          type: number
+        video720p:
+          type: string
+          description: "Нужно поставить в начало домен сайта и затем видео (http://localhost:4000/video720p)"
+        video360p:
+          type: string
+          description: "Нужно поставить в начало домен сайта и затем видео (http://localhost:4000/video720p)"
+        duration:
+          type: string
+          example: "5441.303"
+          description: "Длительность видео в минутах"
+        image:
+          type: string
+          description: "Нужно поставить в начало домен сайта и затем картинку (http://localhost:4000/image)"
+        title:
+          type: string
+          example: ""
+        status:
+          type: string
+          example: "ACTIVE|PROCESS|BLOCK"
+        description:
+          type: string
+          example: ""
+        author:
+          type: string
+          example: ""
+        qualification:
+          type: string
+          example: ""
+        order:
+          type: string
+          example: "0"
+        isAlwaysOpened:
+          type: boolean
+          example: "true|false"
+        created_at:
+          type: string
+          example: "2024-06-25T05:38:56.835Z"
+        updated_at:
+          type: string
+          example: "2024-06-25T05:38:56.835Z"
+        assignments:
+          type: array
+          items:
+            $ref: "#/components/schemas/Assignment"
     Assignment:
       type: object
       properties:
