@@ -333,11 +333,10 @@ paths:
           content:
             application/json:
               schema:
-                type: object
+                type: array
                 properties:
-                  user:
-                    items:
-                      $ref: "#/components/schemas/RawLesson"
+                  items:
+                    $ref: "#/components/schemas/RawLesson"
   /api/v1/lesson/student:
     get:
       summary: "Получение уроков студента"
