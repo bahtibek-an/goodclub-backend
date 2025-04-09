@@ -10,7 +10,7 @@ const lessonRoutes = Router();
 const lessonController = new LessonController();
 
 // Routes for user
-lessonRoutes.get("/list", lessonController.getAllLessons);
+lessonRoutes.get("/list", lessonController.getLessons);
 lessonRoutes.get("/student", authMiddleware, roleMiddleware(UserRole.USER), lessonController.getStudentLessons);
 lessonRoutes.get("/current-lesson", authMiddleware, roleMiddleware(UserRole.USER), lessonController.getStudentLesson)
 lessonRoutes.post("/complete/:id", authMiddleware, roleMiddleware(UserRole.USER), lessonController.completeLesson);

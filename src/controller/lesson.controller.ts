@@ -110,6 +110,16 @@ class LessonController {
         }
     }
 
+    public getLessons = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const lessons = await this.lessonService.getLessons();
+            console.log(lessons);
+            return res.json(lessons);
+        } catch (e) {
+            next(e);
+        }
+    }
+
     public getLessonById = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const {id} = req.params;

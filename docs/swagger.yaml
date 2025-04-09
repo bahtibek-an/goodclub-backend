@@ -334,9 +334,8 @@ paths:
             application/json:
               schema:
                 type: array
-                properties:
-                  items:
-                    $ref: "#/components/schemas/RawLesson"
+                items:
+                  $ref: "#/components/schemas/RawLesson"
   /api/v1/lesson/student:
     get:
       summary: "Получение уроков студента"
@@ -351,11 +350,9 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  user:
-                    items:
-                      $ref: "#/components/schemas/Lesson"
+                type: array
+                items:
+                  $ref: "#/components/schemas/Lesson"
         '500':
           description: "Ошибка сервера."
           content:
