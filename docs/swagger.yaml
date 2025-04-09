@@ -319,6 +319,25 @@ paths:
                     type: string
                     example: "Internal server error"
                     description: "Сообщение об ошибке."
+  /api/v1/lesson/list:
+    get:
+      summary: "Получение уроков"
+      tags:
+        - "Lesson"
+      security:
+        - bearerAuth: [ ]
+      description: "Если у урока статус LOCKED тогда эти уроки закрытые, UNLOCKED текущий урок, COMPLETED заверщенные, isAlwaysOpened означает то что урок открыть полностью не смотря на статус COMPLETED или LOCKED"
+      responses:
+        '200':
+          description: ""
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    items:
+                      $ref: "#/components/schemas/Lesson"
   /api/v1/lesson/student:
     get:
       summary: "Получение уроков студента"
@@ -335,11 +354,9 @@ paths:
               schema:
                 type: object
                 properties:
-                  accessToken:
-                    type: string
-                    example: "accessToken"
                   user:
-                    $ref: "#/components/schemas/User"
+                    items:
+                      $ref: "#/components/schemas/Lesson"
         '500':
           description: "Ошибка сервера."
           content:
@@ -481,6 +498,11 @@ components:
         status:
           type: string
           example: "LOCKED|UNLOCKED|COMPLETED"
+        lesson:
+          $ref: "#/components/schemas/RawLesson"
+    RawLesson:
+      type: object
+      properties:
         lesson:
           type: object
           properties:
